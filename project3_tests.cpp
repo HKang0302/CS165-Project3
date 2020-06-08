@@ -9,7 +9,7 @@
 // so it's a good idea to create and try different test cases
 
 #include "project3.h"
-#include "Erdos-Renyi.h"
+//#include "Erdos-Renyi.h"
 #include "helpers.h"
 #include <assert.h>
 #include <iostream>

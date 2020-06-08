@@ -1,12 +1,9 @@
 #include "graph.h"
 #include "helpers.h"
 #include <list>
-#include <iostream>
-//using namespace std;
 
 int get_diameter(Graph graph)
 {
-  //cout << "num nodes: " << graph.get_num_nodes() << endl;
   bool* visited = new bool[graph.get_num_nodes()];
 
   for (int i = 0; i < graph.get_num_nodes(); i++)

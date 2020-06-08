@@ -1,6 +1,4 @@
 #include "graph.h"
-#include <iostream>
-using namespace std;
 
 bool debug = false;
 
@@ -13,17 +11,17 @@ Graph::Graph(int num_nodes, std::vector<int> u, std::vector<int> v)
   // create nodes
   for (int i = 0; i < nNode; i++)
   {
-    Node n = Node(i);
+    Node n = Node(i+1);
     nodes.push_back(n);
   }
 
   // add edges and adj of the nodes
   for (int i = 0; i < nEdge; i++)
   {
-    nodes[u[i]].addNeighbor(nodes[v[i]]);
-    nodes[v[i]].addNeighbor(nodes[u[i]]);
-    edges.push_back(std::make_pair(nodes[u[i]], nodes[u[i]]));
-    edges.push_back(std::make_pair(nodes[u[i]], nodes[u[i]]));
+    nodes[u[i] - 1].addNeighbor(nodes[v[i] - 1]);
+    nodes[v[i] - 1].addNeighbor(nodes[u[i] - 1]);
+    edges.push_back(std::make_pair(nodes[u[i] - 1], nodes[u[i] - 1]));
+    edges.push_back(std::make_pair(nodes[u[i] - 1], nodes[u[i] - 1]));
   }  
 }
 
@@ -77,11 +75,9 @@ int Graph::BFS(int nID, int& dMax)
   int startId = nID;
 
   int distance = 0;
-
-  bool visitedBFS[10000000] = { false, };
-  //bool* visitedBFS = new bool[get_num_nodes()];
-  //for (int i = 0; i < get_num_nodes(); i++)
-  //  visitedBFS[i] = false;
+  bool* visitedBFS = new bool[get_num_nodes()];
+  for (int i = 0; i < get_num_nodes(); i++)
+    visitedBFS[i] = false;
 
   std::list<int> queue; // list of ids
 
@@ -140,7 +136,7 @@ int Graph::BFS(int nID, int& dMax)
   if (dMax < distance)
     dMax = distance;
 
-  //delete[] visitedBFS;
+  delete[] visitedBFS;
   return nID; //or firstID?
 }
 
