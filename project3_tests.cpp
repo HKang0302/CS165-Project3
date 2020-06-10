@@ -9,7 +9,7 @@
 // so it's a good idea to create and try different test cases
 
 #include "project3.h"
-//#include "Erdos-Renyi.h"
+#include "Erdos-Renyi.h"
 #include "helpers.h"
 #include <assert.h>
 #include <iostream>
@@ -173,58 +173,60 @@ int main()
     //newline();
 
 
-    message(string("*******************************************")
-            + string("\nnetwork algorithms\n")
-            + string("*******************************************"));
-    message("Testing graph = (3, {(1, 2), (2, 3)})");
-    newline();
-    graph = make_graph(3, vector<int>{1, 2}, vector<int>{2, 3});
-    message("Testing graph returns get_diameter(graph) == 2");
-    assert (get_diameter(graph) == 2);
-    message("Testing graph returns get_clustering_coefficient(graph) == 0");
-    assert(floating_compare(get_clustering_coefficient(graph), 0));
-    message("Testing graph returns get_degree_distribution == {{1, 2}, {2, 1}}");
-    assert (get_degree_distribution(graph) == (std::map<int, int>{{1, 2}, {2, 1}}));
+    //message(string("*******************************************")
+    //        + string("\nnetwork algorithms\n")
+    //        + string("*******************************************"));
+    //message("Testing graph = (3, {(1, 2), (2, 3)})");
+    //newline();
+    //graph = make_graph(3, vector<int>{1, 2}, vector<int>{2, 3});
+    //message("Testing graph returns get_diameter(graph) == 2");
+    //assert (get_diameter(graph) == 2);
+    //message("Testing graph returns get_clustering_coefficient(graph) == 0");
+    //assert(floating_compare(get_clustering_coefficient(graph), 0));
+    //message("Testing graph returns get_degree_distribution == {{1, 2}, {2, 1}}");
+    //assert (get_degree_distribution(graph) == (std::map<int, int>{{1, 2}, {2, 1}}));
 
-    message("Testing graph = (10, {(1, 4), (1, 8), (2, 5), (2, 6), (2,7), (3, 4), (3, 8), (4, 5), (4, 9), (4,10), (5, 6), (5, 10), (6, 7), (9, 10)}");
-    newline();
-    graph = make_graph(10, vector<int>{1, 1, 2, 2, 2, 3, 3, 4, 4, 4, 5, 5, 6, 9}, vector<int>{4, 8, 5, 6, 7, 4, 8, 5, 9, 10, 6, 10, 7, 10});
-    message("Testing graph returns get_diameter(graph) == 5");
-    assert (get_diameter(graph) == 5);
-    message("Testing graph returns get_clustering_coefficient(graph) == 0.4");
-    assert(floating_compare(get_clustering_coefficient(graph), 0.4));
-    message("Testing graph returns get_degree_distribution == {{2, 5}, {3, 3}, {4, 1}, {5, 1}}");
-    assert (get_degree_distribution(graph) == (std::map<int, int>{{2, 5}, {3, 3}, {4, 1}, {5, 1}}));
+    //message("Testing graph = (10, {(1, 4), (1, 8), (2, 5), (2, 6), (2,7), (3, 4), (3, 8), (4, 5), (4, 9), (4,10), (5, 6), (5, 10), (6, 7), (9, 10)}");
+    //newline();
+    //graph = make_graph(10, vector<int>{1, 1, 2, 2, 2, 3, 3, 4, 4, 4, 5, 5, 6, 9}, vector<int>{4, 8, 5, 6, 7, 4, 8, 5, 9, 10, 6, 10, 7, 10});
+    //message("Testing graph returns get_diameter(graph) == 5");
+    //assert (get_diameter(graph) == 5);
+    //message("Testing graph returns get_clustering_coefficient(graph) == 0.4");
+    //assert(floating_compare(get_clustering_coefficient(graph), 0.4));
+    //message("Testing graph returns get_degree_distribution == {{2, 5}, {3, 3}, {4, 1}, {5, 1}}");
+    //assert (get_degree_distribution(graph) == (std::map<int, int>{{2, 5}, {3, 3}, {4, 1}, {5, 1}}));
 
-    message("My test");
-    newline();
-    graph = make_graph(10, vector<int>{1, 1, 1, 1, 1, 2, 2, 3, 3, 7, 7, 7, 8, 9}, vector<int>{2, 3, 4, 6, 8, 5, 8, 4, 5, 8, 9, 10, 10, 10});
-    message("Testing graph returns get_diameter(graph) == 4");
-    assert(get_diameter(graph) == 4);
-    message("Testing graph returns get_clustering_coefficient(graph) == 0.387097");
-    assert(floating_compare(get_clustering_coefficient(graph), 0.387097));
+    //message("My test");
+    //newline();
+    //graph = make_graph(10, vector<int>{1, 1, 1, 1, 1, 2, 2, 3, 3, 7, 7, 7, 8, 9}, vector<int>{2, 3, 4, 6, 8, 5, 8, 4, 5, 8, 9, 10, 10, 10});
+    //message("Testing graph returns get_diameter(graph) == 4");
+    //assert(get_diameter(graph) == 4);
+    //message("Testing graph returns get_clustering_coefficient(graph) == 0.387097");
+    //assert(floating_compare(get_clustering_coefficient(graph), 0.387097));
 
     //message(string("*******************************************")
     //  + string("\nrandom network algorithms\n")
     //  + string("*******************************************"));
 
-    //message(string("create ER graph"));
-    //newline();
-    //ERgraph er_graph = ERgraph(4);
-    //cout << "number of edges: " << er_graph.startV.size() << endl;
+    message(string("create ER graph"));
+    newline();
+    ERgraph er_graph = ERgraph(10000);
+    //cout << "number of edges: " << er_graph.startV.size() << " number of starting nodes: " << er_graph.startV.size() << " number of ending edges: " << er_graph.endV.size() << endl;
     //cout << "starting nodes:\t"; printVector(er_graph.startV);
     //cout << "ending nodes:\t"; printVector(er_graph.endV);
-    //cout << endl;
-    //graph = make_graph(4, er_graph.startV, er_graph.endV);
+    cout << endl;
+    graph = make_graph(10000, er_graph.startV, er_graph.endV);
+    //message("Testing graph returns get_diameter(graph) == 2");
+    cout << "diameter: " << get_diameter(graph) << endl;
+    //assert(get_diameter(graph) == 2);
+    cout << "clustering coefficient: " << get_clustering_coefficient(graph) << endl;
 
-    ////message("Testing graph returns get_diameter(graph) == 2");
-    ////cout << "diameter: " << get_diameter(graph) << endl;
-    ////assert(get_diameter(graph) == 2);
-    //cout << "clustering coefficient: " << get_clustering_coefficient(graph) << endl;
+
+
+
     //message("Testing graph returns get_clustering_coefficient(graph) == 0.387097");
     //cout << "clustering coefficient: " << get_clustering_coefficient(graph) << endl;
     ////assert(floating_compare(get_clustering_coefficient(graph), 0.387097));
-
 
     message(string("+++++++++++++++++++++++++++++++++++++++++++")
             + string("\nall tests passed!\n")

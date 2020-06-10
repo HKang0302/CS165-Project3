@@ -17,8 +17,8 @@ class Node {
 	// implement any newly declared member functions in node.cpp
     Node(int nodeId);
     int degree;
-    std::vector<Node> adj;
-    void addNeighbor(Node newNode); // nID refers to neighbor ID
+    //std::vector<Node> adj;
+    //void addNeighbor(Node newNode); // nID refers to neighbor ID
 };
 
 #endif

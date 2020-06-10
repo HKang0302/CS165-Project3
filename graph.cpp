@@ -1,4 +1,8 @@
 #include "graph.h"
+#include "helpers.h"
+#include <iostream>
+#include <cstring>
+using namespace std;
 
 bool debug = false;
 
@@ -6,22 +10,21 @@ Graph::Graph(int num_nodes, std::vector<int> u, std::vector<int> v)
 {
   this->nNode = num_nodes;
   this->nEdge = u.size();
-  std::vector<std::pair<int, int>> tempEdges;
+  edges = new std::vector<Node>[num_nodes+1];
 
   // create nodes
-  for (int i = 0; i < nNode; i++)
+  for (int i = 0; i <= num_nodes; i++)
   {
-    Node n = Node(i+1);
+    Node n = Node(i);
     nodes.push_back(n);
   }
 
   // add edges and adj of the nodes
   for (int i = 0; i < nEdge; i++)
   {
-    nodes[u[i] - 1].addNeighbor(nodes[v[i] - 1]);
-    nodes[v[i] - 1].addNeighbor(nodes[u[i] - 1]);
-    edges.push_back(std::make_pair(nodes[u[i] - 1], nodes[u[i] - 1]));
-    edges.push_back(std::make_pair(nodes[u[i] - 1], nodes[u[i] - 1]));
+    edges[u[i]].push_back(nodes[v[i]]);
+    edges[v[i]].push_back(nodes[u[i]]);
+    nodes[v[i]].degree++; nodes[u[i]].degree++;
   }  
 }
 
@@ -38,14 +41,14 @@ int Graph::get_num_edges() {
 }
 
 std::vector<Node> Graph::get_neighbors(Node u) {
-  return u.adj;
+  return edges[u.id];
 }
 
 std::map<int, Node>Graph::get_id_to_node_map(){
   std::map<int, Node> result;
-  for (int i = 0; i < nNode; i++)
+  for (int i = 1; i <= nNode; i++)
   {
-    result.insert(std::pair<int, Node>(i+1, nodes[i]));
+    result.insert(std::pair<int, Node>(i, nodes[i]));
   }
 	return result;
 }
@@ -67,21 +70,18 @@ bool Graph::isNeighbor(Node u, Node v)
   return false;
 }
 
-int Graph::BFS(int nID, int& dMax)
+int Graph::BFS(int nID, int& dMax, bool* visited)
 {
-  if (nID == 2)
-    debug = true;
-
   int startId = nID;
-
   int distance = 0;
-  bool* visitedBFS = new bool[get_num_nodes()];
-  for (int i = 0; i < get_num_nodes(); i++)
-    visitedBFS[i] = false;
+  bool* visitedBFS = new bool[get_num_nodes()+1];
+  //for (int i = 0; i < get_num_nodes(); i++)
+  //  visitedBFS[i] = false;
+  memset(visitedBFS, false, sizeof(visitedBFS));
 
   std::list<int> queue; // list of ids
 
-  visitedBFS[nID - 1] = true;
+  visitedBFS[nID] = true;
   queue.push_back(nID);
 
   int firstID = nID;
@@ -167,8 +167,7 @@ std::list<int> Graph::getDegeneracy(std::list<int>* N)
   std::list<int>* D = new std::list<int>[maxDegree + 1]; // 0 to maxDegree
 
   bool* H = new bool[degrees.size()]; // index: id-1
-  for (int i = 0; i < degrees.size(); i++)
-    H[i] = false;
+  memset(H, false, sizeof(H));
 
   for (int i = 0; i < degrees.size(); i++)
     D[degrees[i]].push_back(i + 1);

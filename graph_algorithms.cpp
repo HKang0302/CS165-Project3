@@ -1,22 +1,29 @@
 #include "graph.h"
 #include "helpers.h"
 #include <list>
+#include <iostream>
+#include <cstring>
+using namespace std;
+
 
 int get_diameter(Graph graph)
 {
   bool* visited = new bool[graph.get_num_nodes()];
-
-  for (int i = 0; i < graph.get_num_nodes(); i++)
-    visited[i] = false;
+  //for (int i = 1; i < graph.get_num_nodes(); i++)
+  //  visited[i] = false;
+  memset(visited, false, sizeof(visited));
 
   int dMax = 0, id = 1;
+  visited[0] = true;
   while (id != -1)
   {
-    visited[id - 1] = true;
+    cout << "id: " << id << endl;
     int farNodeID = graph.BFS(id, dMax);
-    id = visitedAll(graph, visited);
-    if (id != -1 && !visited[farNodeID-1])
+    if (!visited[farNodeID-1])
       id = farNodeID;
+    else
+      id = visitedAll(graph, visited);
+    visited[id - 1] = true;
   }
   delete[] visited;
   return dMax;

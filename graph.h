@@ -29,7 +29,7 @@ class Graph
   private:
     int nNode=0, nEdge = 0;
     std::vector<Node> nodes;
-    std::vector<std::pair<Node,Node>> edges; // edges between u and v
+    std::vector<Node>* edges; // edges between u and v
     
 };
 

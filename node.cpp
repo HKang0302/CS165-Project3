@@ -7,8 +7,8 @@ Node::Node(int nodeId)
   degree = 0;
 }
 
-void Node::addNeighbor(Node newNode)
-{
-  this->adj.push_back(newNode);
-  this->degree++;
-}
+//void Node::addNeighbor(Node newNode)
+//{
+//  this->adj.push_back(newNode);
+//  this->degree++;
+//}
