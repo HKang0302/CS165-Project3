@@ -20,11 +20,15 @@ class Graph
     Graph() {};
     Graph(int num_nodes, std::vector<int> u, std::vector<int> v);
     Node getNode(int id);
+    std::vector<Node> getNodes();
     bool isNeighbor(Node u, Node v);
-    int BFS(int nID, int& dMax);
-    std::list<int> getDegeneracy(std::list<int>* N);
+    int BFS(int nID, int& dist);
     std::vector<int> getDegrees();
+    int getDegree(Node node);
     int getMaxDegree(std::vector<int> degrees);
+    int countTriangles();
+    int getDenom();
+    std::map<int, int> vertex_to_degree_map();
 
   private:
     int nNode=0, nEdge = 0;

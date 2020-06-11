@@ -58,29 +58,3 @@ bool isInList(int v, std::list<int> l)
       return true;
   return false;
 }
-
-int countTriangles(Graph graph)
-{
-  std::list<int>* idN = new std::list<int>[graph.get_num_nodes()];
-  std::list<int> degeneracy = graph.getDegeneracy(idN);
-  std::list<int> checked;
-  int result = 0;
-
-  for (int i = 0; i < degeneracy.size(); i++)
-  {
-    int v = *std::next(degeneracy.begin(), i);
-    std::list<int> adj = idN[v - 1];
-    if (adj.size() > 1)
-    {
-      for (int j = 0; j < adj.size() - 1; j++)
-        for (int k = 1; k < adj.size(); k++)
-        {
-          int u = *std::next(adj.begin(), j), w = *std::next(adj.begin(), k);
-          if (graph.isNeighbor(graph.getNode(u), graph.getNode(w)))
-            result++;
-        }
-    }
-  }
-  delete[] idN;
-  return result;
-}

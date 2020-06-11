@@ -10,6 +10,7 @@
 
 #include "project3.h"
 #include "Erdos-Renyi.h"
+#include "Barabasi_Albert.h"
 #include "helpers.h"
 #include <assert.h>
 #include <iostream>
@@ -41,7 +42,7 @@ bool vectors_have_same_nodes(vector<Node> nodes1, vector<Node> nodes2)
     return nodes1 == nodes2;
 }
 
-int main()
+int main21()
 {
     //message(string("*******************************************")
     //        + string("\ngraph interface\n")
@@ -180,6 +181,7 @@ int main()
     //newline();
     //graph = make_graph(3, vector<int>{1, 2}, vector<int>{2, 3});
     //message("Testing graph returns get_diameter(graph) == 2");
+    //cout << get_diameter(graph) << endl;
     //assert (get_diameter(graph) == 2);
     //message("Testing graph returns get_clustering_coefficient(graph) == 0");
     //assert(floating_compare(get_clustering_coefficient(graph), 0));
@@ -204,22 +206,23 @@ int main()
     //message("Testing graph returns get_clustering_coefficient(graph) == 0.387097");
     //assert(floating_compare(get_clustering_coefficient(graph), 0.387097));
 
-    //message(string("*******************************************")
-    //  + string("\nrandom network algorithms\n")
-    //  + string("*******************************************"));
+    message(string("*******************************************")
+      + string("\nrandom network algorithms\n")
+      + string("*******************************************"));
 
-    message(string("create ER graph"));
+    message(string("create BA graph"));
     newline();
-    ERgraph er_graph = ERgraph(10000);
+    BAgraph bagraph = BAgraph(10000, 3);
     //cout << "number of edges: " << er_graph.startV.size() << " number of starting nodes: " << er_graph.startV.size() << " number of ending edges: " << er_graph.endV.size() << endl;
     //cout << "starting nodes:\t"; printVector(er_graph.startV);
     //cout << "ending nodes:\t"; printVector(er_graph.endV);
     cout << endl;
-    graph = make_graph(10000, er_graph.startV, er_graph.endV);
-    //message("Testing graph returns get_diameter(graph) == 2");
+    graph = make_graph(10000, bagraph.startV, bagraph.endV);
+    message("Testing graph returns get_diameter(graph) == 2");
     cout << "diameter: " << get_diameter(graph) << endl;
     //assert(get_diameter(graph) == 2);
     cout << "clustering coefficient: " << get_clustering_coefficient(graph) << endl;
+    get_degree_distribution(graph);
 
 
 
@@ -233,6 +236,6 @@ int main()
             + string("+++++++++++++++++++++++++++++++++++++++++++"));
 
 
-
+    return 0;
 }
 

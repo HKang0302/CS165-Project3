@@ -2,6 +2,8 @@
 #include "helpers.h"
 #include <iostream>
 #include <cstring>
+#include <unordered_set>
+#include <queue>
 using namespace std;
 
 bool debug = false;
@@ -70,74 +72,100 @@ bool Graph::isNeighbor(Node u, Node v)
   return false;
 }
 
-int Graph::BFS(int nID, int& dMax, bool* visited)
+int Graph::BFS(int nID, int& dist)
 {
-  int startId = nID;
-  int distance = 0;
-  bool* visitedBFS = new bool[get_num_nodes()+1];
-  //for (int i = 0; i < get_num_nodes(); i++)
-  //  visitedBFS[i] = false;
-  memset(visitedBFS, false, sizeof(visitedBFS));
+  std::unordered_set<int> seen;
+  std::queue<int> q;
+  dist = -1;
+  int node = 0;
+  q.push(nID);
+  seen.insert(nID);
 
-  std::list<int> queue; // list of ids
-
-  visitedBFS[nID] = true;
-  queue.push_back(nID);
-
-  int firstID = nID;
-  int first_added = -1, temp = -1;
-  while (!queue.empty())
-  {
-    nID = queue.front();
-    queue.pop_front();
-
-    std::vector<Node> adj = get_neighbors(getNode(nID));
-
-    if (firstID == nID)
-      first_added = -1;
-
-    for (int i = 0; i < adj.size(); i++)
-    {
-      int id = adj[i].id;
-      if (!visitedBFS[id - 1])
-      {
-        visitedBFS[id - 1] = true;
-        queue.push_back(id);
-        if (first_added == -1)
-          first_added = id;
-        else if (first_added == -100)
-        {
-          firstID = id;
-          first_added = -1;
+  while (!q.empty()) {
+    std::vector<int> node_list;
+    int recent_node;
+    // aggregate all nodes to find all the neighbors at once
+    while (!q.empty()) {
+      node_list.push_back(q.front());
+      q.pop();
+    }
+    for (const auto& current : node_list) {
+      for (auto& neighbor : edges[current]) {
+        if (seen.find(neighbor.id) == seen.end()) {
+          recent_node = neighbor.id;
+          seen.insert(neighbor.id);
+          q.push(neighbor.id);
         }
       }
     }
-
-    if (nID == firstID)
-    {
-      if (first_added != -1)
-      {
-        firstID = first_added;
-        temp = first_added;
-        first_added = -1;
-      }
-
-      else
-      {
-        firstID = -1;
-        first_added = -100;
-      }
-
-      if (nID != startId)
-        distance++;
-    }
+    dist++;
+    node = recent_node;
   }
 
-  if (dMax < distance)
-    dMax = distance;
+  return node;
 
-  delete[] visitedBFS;
-  return nID; //or firstID?
+  //int startId = nID;
+  //bool* visitedBFS = new bool[get_num_nodes()+1];
+  ////for (int i = 0; i < get_num_nodes(); i++)
+  ////  visitedBFS[i] = false;
+  //memset(visitedBFS, false, sizeof(visitedBFS));
+
+  //std::list<int> queue; // list of ids
+
+  //visitedBFS[nID] = true;
+  //queue.push_back(nID);
+
+  //int firstID = nID;
+  //int first_added = -1, temp = -1;
+  //while (!queue.empty())
+  //{
+  //  nID = queue.front();
+  //  queue.pop_front();
+
+  //  std::vector<Node> adj = get_neighbors(getNode(nID));
+
+  //  if (firstID == nID)
+  //    first_added = -1;
+
+  //  for (int i = 0; i < adj.size(); i++)
+  //  {
+  //    int id = adj[i].id;
+  //    if (!visitedBFS[id - 1])
+  //    {
+  //      visitedBFS[id - 1] = true;
+  //      queue.push_back(id);
+  //      if (first_added == -1)
+  //        first_added = id;
+  //      else if (first_added == -100)
+  //      {
+  //        firstID = id;
+  //        first_added = -1;
+  //      }
+  //    }
+  //  }
+
+  //  if (nID == firstID)
+  //  {
+  //    if (first_added != -1)
+  //    {
+  //      firstID = first_added;
+  //      temp = first_added;
+  //      first_added = -1;
+  //    }
+
+  //    else
+  //    {
+  //      firstID = -1;
+  //      first_added = -100;
+  //    }
+
+  //    if (nID != startId)
+  //      distance++;
+  //  }
+  //}
+
+  //delete[] visitedBFS;
+  //return nID; //or firstID?
 }
 
 std::vector<int> Graph::getDegrees()
@@ -159,51 +187,64 @@ int Graph::getMaxDegree(std::vector<int> degrees)
   return max;
 }
 
-std::list<int> Graph::getDegeneracy(std::list<int>* N)
+std::vector<Node> Graph::getNodes()
 {
-  std::vector<int> degrees = getDegrees(); // ith's node's degree
-  std::list<int> L; // output list
-  int maxDegree = getMaxDegree(degrees);
-  std::list<int>* D = new std::list<int>[maxDegree + 1]; // 0 to maxDegree
+  return nodes;
+}
 
-  bool* H = new bool[degrees.size()]; // index: id-1
-  memset(H, false, sizeof(H));
+int Graph::getDegree(Node node)
+{
+  return edges[node.id].size();
+}
 
-  for (int i = 0; i < degrees.size(); i++)
-    D[degrees[i]].push_back(i + 1);
-
-  int k = 0;
-  for (int n = 0; n < degrees.size(); n++)
-  {
-    for (int i = 0; i <= maxDegree; ++i)
-    {
-      if (!D[i].empty())
-      {
-        k = std::max(k, i);
-        int v = D[i].front();
-        L.push_front(v);
-        D[i].pop_front();
-        H[v - 1] = true;
-        std::vector<Node> adj = get_neighbors(getNode(v));
-        for (int j = 0; j < adj.size(); j++)
-        {
-          int w = adj[j].id;
-          if (!H[w - 1])
-          {
-            degrees[w - 1]--;
-            int d = degrees[w - 1];
-            // remove the node from D[d+1]
-            D[d + 1].remove(w);
-            // add the node to D[d]
-            D[d].push_back(w);
-            N[v - 1].push_back(w);
-            D[d].sort();
+int Graph::countTriangles()
+{
+  int cnt = 0;
+  for (const auto& node : nodes) {
+    std::vector<Node> neighbors = get_neighbors(node.id);
+    for (unsigned int i = 0; i < neighbors.size(); ++i) {
+      for (unsigned int j = i + 1; j < neighbors.size(); ++j) {
+        int deg_v = getDegree(node);
+        Node& left = neighbors[i];
+        int left_deg = getDegree(left);
+        Node& right = neighbors[j];
+        int right_deg = getDegree(right);
+        // using pseudocode from Stanford CS 167 paper http://theory.stanford.edu/~tim/s14/l/l1.pdf 
+        // if both neighbors of v have higher degree than v or equal but higher lexicographically for individual ties
+        if ((left_deg > deg_v && right_deg > deg_v)
+          || (left_deg > deg_v && right_deg == deg_v && right.id > node.id)
+          || (right_deg > deg_v && left_deg == deg_v && left.id > node.id)) {
+          if (isNeighbor(left, right)) {
+            ++cnt;
           }
         }
-        break;
+
       }
     }
   }
-  delete[] D;
-  return L;
+  return cnt;
+}
+
+int Graph::getDenom()
+{
+  int total = 0;
+  for (const auto& node : nodes)
+  {
+    if (node.id != 0)
+    {
+      int deg = getDegree(node);
+      total += (deg * (deg - 1) / 2);
+    }
+  }
+  return total;
+}
+
+std::map<int, int> Graph::vertex_to_degree_map(){
+  std::map<int, int> ret;
+  for (const auto& node : nodes)
+  {
+    if(node.id != 0)
+      ret[node.id] = getDegree(node);
+  }
+  return ret;
 }
