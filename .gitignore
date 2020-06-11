@@ -1,3 +1,7 @@
 .vs/
 *.zip
 *.exe
+csv_files/
+.ipynb_checkpoints/
+*.ipynb
+*.docx
